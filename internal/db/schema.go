@@ -13,12 +13,10 @@ func CreateSchema() error {
 		`CREATE TABLE IF NOT EXISTS coupons (
 			coupon_code TEXT PRIMARY KEY,
 			usage_type TEXT CHECK(usage_type IN ('one_time', 'multi_use', 'time_based')),
-			discount_type TEXT CHECK(discount_type IN ('items', 'charges')),
 			max_usage_per_user INT,
 			min_order_value DECIMAL,
 			terms_and_conditions TEXT,
 			expiry_date TIMESTAMP,
-			valid_time_window TIMESTAMP,
 			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 		);`,
 
@@ -63,12 +61,22 @@ func CreateSchema() error {
 			FOREIGN KEY (coupon_code) REFERENCES coupons(coupon_code)
 		);`,
 
+		// for multiple time windows - hence separate primary key
 		// Time Windows Table (for time-based coupons)
 		`CREATE TABLE IF NOT EXISTS time_windows (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			coupon_code TEXT,
 			start_time TIMESTAMP,
 			end_time TIMESTAMP,
+			FOREIGN KEY (coupon_code) REFERENCES coupons(coupon_code)
+		);`,
+		
+		// Discounts Table (for multiple discounts per coupon)
+		`CREATE TABLE IF NOT EXISTS discounts (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			coupon_code TEXT,
+			discount_type TEXT CHECK(discount_type IN ('inventory', 'charges')),
+			discount_value DECIMAL,
 			FOREIGN KEY (coupon_code) REFERENCES coupons(coupon_code)
 		);`,
 	}
