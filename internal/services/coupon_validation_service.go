@@ -25,7 +25,23 @@ func ValidateCoupon(couponCode string, cartItems []models.CartItem, orderTotal f
 		return false, "order total below minimum", models.Discount{}, nil
 	}
 
-	// More validation logic goes here...
+	// Check if the cart contains applicable items
+	// This is a simplified example; you'd loop through cartItems and check against coupon.ApplicableMedicineIDs and coupon.ApplicableCategories
+	for _, item := range cartItems {
+		isApplicable := false
+		for _, couponMedicineID := range coupon.ApplicableMedicineIDs {
+			if item.ID == couponMedicineID {
+				isApplicable = true
+				break
+			}
+		}
+
+		if !isApplicable {
+			return false, "item not applicable for this coupon", models.Discount{}, nil
+		}
+	}
+
+	// Further checks for time-based or multi-use coupons could go here...
 
 	// If all checks pass, return true and the discount
 	discount := models.Discount{

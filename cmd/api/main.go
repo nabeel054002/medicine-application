@@ -3,18 +3,25 @@ package main
 import (
 	"log"
 	"net/http"
+	"coupon-system/internal/db"
+	"coupon-system/internal/handlers"
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	mux := http.NewServeMux()
-
-	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"status":"ok"}`))
-	})
-
-	log.Println("Server running at http://localhost:8080")
-	if err := http.ListenAndServe(":8080", mux); err != nil {
-		log.Fatal(err)
+	// Initialize the database
+	err := db.InitDB()
+	if err != nil {
+		log.Fatalf("Could not initialize the database: %v", err)
 	}
+
+	// Initialize the router
+	router := mux.NewRouter()
+
+	// Define routes
+	router.HandleFunc("/coupons/create", handlers.CreateCoupon).Methods("POST")
+
+	// Start the server
+	log.Println("Starting server on :8080")
+	http.ListenAndServe(":8080", router)
 }
