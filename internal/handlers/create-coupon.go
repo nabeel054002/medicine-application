@@ -1,7 +1,8 @@
 package handlers
 
+ // Assuming this is where the DB logic resides
 import (
-	"github.com/nabeel054002/coupon-system/internal/db" // Assuming this is where the DB logic resides
+	"github.com/nabeel054002/coupon-system/internal/db"
 	"github.com/nabeel054002/coupon-system/internal/models"
 	"encoding/json"
 	"fmt"
@@ -22,7 +23,7 @@ func CreateCoupon(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Validate the input data
-	if coupon.Code == "" || coupon.DiscountType == "" || coupon.DiscountValue <= 0 {
+	if coupon.Code == "" || len(coupon.Discounts) == 0 {
 		http.Error(w, "Missing or invalid required fields", http.StatusBadRequest)
 		return
 	}
