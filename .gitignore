@@ -1,0 +1,42 @@
+# Go binary files
+/bin/
+/obj/
+
+# SQLite Database file
+coupons.db
+
+# Build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Dependency directories
+/vendor/
+
+# IDE/Editor specific files
+# IntelliJ
+.idea/
+
+# VS Code
+.vscode/
+
+# GoLand (JetBrains IDE)
+.idea/
+
+# MacOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+
+# Log files
+*.log
+
+# Go test coverage file
+*.out
+
+# Go related cache directories
+.gocache/

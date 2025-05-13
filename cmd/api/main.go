@@ -3,9 +3,8 @@ package main
 import (
 	"log"
 	"net/http"
-	"coupon-system/internal/db"
-	"coupon-system/internal/handlers"
-	"github.com/gorilla/mux"
+	"github.com/nabeel054002/coupon-system/internal/routes"
+	"github.com/nabeel054002/coupon-system/internal/db"
 )
 
 func main() {
@@ -15,13 +14,18 @@ func main() {
 		log.Fatalf("Could not initialize the database: %v", err)
 	}
 
-	// Initialize the router
-	router := mux.NewRouter()
+	// Create the schema (tables)
+	err = db.CreateSchema()
+	if err != nil {
+		log.Fatalf("Could not create the database schema: %v", err)
+	}
 
-	// Define routes
-	router.HandleFunc("/coupons/create", handlers.CreateCoupon).Methods("POST")
+	// Use centralized router
+	router := routes.NewRouter()
 
-	// Start the server
+	// Start server
 	log.Println("Starting server on :8080")
-	http.ListenAndServe(":8080", router)
+	if err := http.ListenAndServe(":8080", router); err != nil {
+		log.Fatalf("Server failed to start: %v", err)
+	}
 }
