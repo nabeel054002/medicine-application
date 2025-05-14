@@ -10,3 +10,5 @@ trying to implement normalization application
 
 - skipping out the part where in we handle applied and post transaction separately 
 - so on validation itself we use it 
+
+- its fine to have a body in a GET request

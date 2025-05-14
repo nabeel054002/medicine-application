@@ -17,12 +17,6 @@ func GetCouponByCode(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// GetApplicableCoupons handles POST /coupons/applicable
-func GetApplicableCoupons(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"message": "GetApplicableCoupons placeholder"})
-}
-
 // ValidateCoupon handles POST /coupons/validate
 func ValidateCoupon(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
