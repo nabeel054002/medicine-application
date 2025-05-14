@@ -20,6 +20,16 @@ func main() {
 		log.Fatalf("Could not create the database schema: %v", err)
 	}
 
+	err = db.SeedCategories()
+	if err != nil {
+		log.Fatalf("Error seeding categories: %v", err)
+	}
+
+	err = db.SeedMedicines()
+	if err != nil {
+		log.Fatalf("Error in seeding medicines: %v", err)
+	}
+
 	// Use centralized router
 	router := routes.NewRouter()
 

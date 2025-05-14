@@ -1,0 +1,55 @@
+create coupon
+- {
+  "code": "ONE100",
+  "usage_type": "one_time",
+  "max_usage_per_user": 1,
+  "min_order_value": 100.0,
+  "terms_and_conditions": "Valid only once per user on orders above ₹100",
+  "expiry_date": "2025-12-31T23:59:59Z",
+  "discounts": [
+    {
+      "discount_type": "items",
+      "discount_value": 15.0
+    }
+  ],
+  "applicable_for_categories": [1, 2]
+}
+
+
+- {
+  "code": "MULTI50",
+  "usage_type": "multi_use",
+  "max_usage_per_user": 5,
+  "terms_and_conditions": "Can be used multiple times on selected medicines",
+  "discounts": [
+    {
+      "discount_type": "charges",
+      "discount_value": 50.0
+    }
+  ],
+  "applicable_for_medicine_ids": ["med001", "med999"]
+}
+
+
+- {
+  "code": "LUNCHTIME",
+  "usage_type": "time_based",
+  "terms_and_conditions": "Only valid between 12 PM - 3 PM",
+  "discounts": [
+    {
+      "discount_type": "items",
+      "discount_value": 10.0
+    }
+  ],
+  "time_windows": [
+    {
+      "start_time": "2025-05-15T12:00:00Z",
+      "end_time": "2025-05-15T15:00:00Z"
+    },
+    {
+      "start_time": "2025-05-16T12:00:00Z",
+      "end_time": "2025-05-16T15:00:00Z"
+    }
+  ]
+}
+
