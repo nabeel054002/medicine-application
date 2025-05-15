@@ -26,6 +26,9 @@ func GetApplicableCoupons(w http.ResponseWriter, r *http.Request) {
 
 	categoryPlaceholders := utils.Placeholders(len(req.CartItems))
 	medicinePlaceholders := utils.Placeholders(len(req.CartItems))
+	// UserID can be used later if needed:
+	userID := req.UserID
+	print("user id: ", userID)
 
 	query := `
 		SELECT DISTINCT c.coupon_code, d.discount_value
@@ -34,6 +37,7 @@ func GetApplicableCoupons(w http.ResponseWriter, r *http.Request) {
 		LEFT JOIN coupon_applicable_medicines cm ON c.coupon_code = cm.coupon_code
 		LEFT JOIN discounts d ON c.coupon_code = d.coupon_code
 		LEFT JOIN time_windows tw ON c.coupon_code = tw.coupon_code
+		LEFT JOIN coupon_usages cu ON c.coupon_code = cu.coupon_code
 		WHERE c.expiry_date > ?
 		AND (c.min_order_value IS NULL OR c.min_order_value <= ?)
 		AND (
@@ -42,16 +46,16 @@ func GetApplicableCoupons(w http.ResponseWriter, r *http.Request) {
 			)
 			OR cm.medicine_id IN (` + medicinePlaceholders + `)
 		)
-		-- Usage type check (only apply time windows if usage_type requires it)
 		AND (
 			(c.usage_type != 'time_based' OR (tw.start_time IS NULL OR ? >= tw.start_time))
 			AND (tw.end_time IS NULL OR ? <= tw.end_time)
 		)
 		AND (
 			c.usage_type != 'one_time'
-			OR (cu.user_id = ? AND (cu.usage_count IS NULL OR cu.usage_count = 0))
+			OR (cu.usage_count IS NULL OR cu.usage_count = 0)
 		)
 	`
+
 
 	args := []interface{}{timestamp, req.OrderTotal}
 	for _, item := range req.CartItems {
@@ -60,6 +64,7 @@ func GetApplicableCoupons(w http.ResponseWriter, r *http.Request) {
 	for _, item := range req.CartItems {
 		args = append(args, item.ID)
 	}
+	args = append(args, timestamp, timestamp)
 
 	rows, err := db.DB.Query(query, args...)
 	if err != nil {

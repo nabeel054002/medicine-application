@@ -5,6 +5,7 @@ type ApplicableCouponsRequest struct {
 	CartItems  []CartItem `json:"cart_items"`
 	OrderTotal float64    `json:"order_total"`
 	Timestamp  string     `json:"timestamp"`
+	UserID    *string     `json:"user_id,omitempty"` // optional for now
 }
 
 // CartItem represents an item in the user's cart
