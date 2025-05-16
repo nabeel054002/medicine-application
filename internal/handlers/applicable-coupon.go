@@ -26,7 +26,6 @@ func GetApplicableCoupons(w http.ResponseWriter, r *http.Request) {
 
 	categoryPlaceholders := utils.Placeholders(len(req.CartItems))
 	medicinePlaceholders := utils.Placeholders(len(req.CartItems))
-	// UserID can be used later if needed:
 	userID := req.UserID
 	print("user id: ", userID)
 

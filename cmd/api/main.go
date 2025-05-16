@@ -8,13 +8,11 @@ import (
 )
 
 func main() {
-	// Initialize the database
 	err := db.InitDB()
 	if err != nil {
 		log.Fatalf("Could not initialize the database: %v", err)
 	}
 
-	// Create the schema (tables)
 	err = db.CreateSchema()
 	if err != nil {
 		log.Fatalf("Could not create the database schema: %v", err)

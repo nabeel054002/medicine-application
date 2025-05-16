@@ -7,8 +7,7 @@ import (
 
 func NewRouter() *mux.Router {
 	router := mux.NewRouter()
-
-	// Coupon routes
+	
 	router.HandleFunc("/coupons/create", handlers.CreateCoupon).Methods("POST")
 	router.HandleFunc("/coupons/{code}", handlers.GetCouponByCode).Methods("GET")
 	router.HandleFunc("/coupons/applicable", handlers.GetApplicableCoupons).Methods("POST")

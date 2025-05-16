@@ -10,7 +10,6 @@ import (
 )
 
 
-// ValidateCoupon handler: checks and registers coupon usage if valid
 func ValidateCoupon(w http.ResponseWriter, r *http.Request) {
 	var req models.ValidateCouponRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -18,14 +17,12 @@ func ValidateCoupon(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Parse timestamp
 	timestamp, err := time.Parse(time.RFC3339, req.Timestamp)
 	if err != nil {
 		http.Error(w, "Invalid timestamp format", http.StatusBadRequest)
 		return
 	}
 
-	// Step 1: Check if coupon exists, is not expired, meets order total and usage limits
 	var (
 		expiryDate       time.Time
 		minOrderValue    *float64
@@ -59,7 +56,6 @@ func ValidateCoupon(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Step 2: Check usage limits for user (if usage_type limits per user)
 	if usageType == "one_time" || usageType == "multi_use" {
 		var usageCount int
 		err = db.DB.QueryRow(`
@@ -100,7 +96,6 @@ func ValidateCoupon(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Step 4: Return success response
 	json.NewEncoder(w).Encode(models.ValidateCouponResponse{
 		Valid: true,
 	})

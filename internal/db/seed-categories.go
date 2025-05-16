@@ -5,9 +5,8 @@ import (
 	"fmt"
 )
 
-// SeedCategories seeds the database with default categories if they don't exist
+// seeds the database with default categories if they don't exist
 func SeedCategories() error {
-	// List of default categories to insert
 	categories := []string{
 		"Pain Relief",
 		"Antibiotics",
@@ -18,14 +17,12 @@ func SeedCategories() error {
 	}
 
 	for _, category := range categories {
-		// Check if category already exists
 		var count int
 		err := DB.QueryRow("SELECT COUNT(*) FROM categories WHERE name = ?", category).Scan(&count)
 		if err != nil {
 			return err
 		}
 
-		// If the category does not exist, insert it
 		if count == 0 {
 			_, err := DB.Exec("INSERT INTO categories (name) VALUES (?)", category)
 			if err != nil {
@@ -38,9 +35,7 @@ func SeedCategories() error {
 	return nil
 }
 
-// SeedMedicines seeds the database with default medicines and associates them with categories
 func SeedMedicines() error {
-	// List of medicines with category names
 	medicines := []struct {
 		ID           string
 		Name         string
@@ -55,21 +50,18 @@ func SeedMedicines() error {
 	}
 
 	for _, medicine := range medicines {
-		// Check if the category exists
 		var categoryID int
 		err := DB.QueryRow("SELECT id FROM categories WHERE name = ?", medicine.CategoryName).Scan(&categoryID)
 		if err != nil {
 			return fmt.Errorf("Error fetching category ID for '%s': %v", medicine.CategoryName, err)
 		}
 
-		// Check if medicine already exists
 		var count int
 		err = DB.QueryRow("SELECT COUNT(*) FROM medicines WHERE id = ?", medicine.ID).Scan(&count)
 		if err != nil {
 			return err
 		}
 
-		// If the medicine does not exist, insert it
 		if count == 0 {
 			_, err := DB.Exec(
 				"INSERT INTO medicines (id, name, category_id) VALUES (?, ?, ?)",

@@ -25,7 +25,6 @@ func validateGeneralCouponFields(c *Coupon) error {
 			return fmt.Errorf("discounts[%d]: discount_value must be greater than 0", i)
 		}
 	}
-	// Also ensure expiry_date is not in the past if it's provided
 	if c.ExpiryDate != nil && c.ExpiryDate.Before(now) {
 		return fmt.Errorf("cannot create a coupon that is already expired")
 	}
@@ -81,7 +80,6 @@ func validateMultiUseCoupon(c *Coupon) error {
 
 // ValidateCoupon validates the input coupon based on usage type
 func (c *Coupon) IsCoupon() error {
-	// General validations applied to all types
 	if err := validateGeneralCouponFields(c); err != nil {
 		return err
 	}
