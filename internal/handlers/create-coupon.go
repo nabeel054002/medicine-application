@@ -19,7 +19,7 @@ func CreateCoupon(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Validate the coupon struct
-	if err := coupon.Validate(); err != nil {
+	if err := coupon.IsCoupon(); err != nil {
 		http.Error(w, fmt.Sprintf("Invalid coupon data: %v", err), http.StatusBadRequest)
 		return
 	}
