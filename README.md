@@ -28,13 +28,14 @@
 - Made creation, validation (usage), and verification flow as well.
 - Was definitely able to get the implementation done, with a certain few assumptions which are available in assumptions.md, although was not able to devtest things entirely
 - Was able to write a docker file for building it into an image and running and testing things by hitting the remote port.
+- Was able to add the swagger commands
+
 - Dont mean to make an excuse off of thigns, but I am having a rather product release within a month, as a result I tried how much I could. Hope thats fine.
 
 - Was not able to devtest edge cases completely
 - Was not able to take care of goroutines or mutexes
 - Was not able to implement request-scoped context, due to time constraints, and me focusing more on the core features.
 - Was not able to implement caching patterns
-
 
 - Especially in DB read-heavy or async operations, goroutines could significantly improve performance.
 - Mutexes may become relevant in tracking coupon usage counts to avoid race conditions.
