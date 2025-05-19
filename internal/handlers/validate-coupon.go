@@ -9,7 +9,17 @@ import (
 	"github.com/nabeel054002/coupon-system/internal/models"
 )
 
-
+// @Summary Validate a coupon
+// @Description Validates a coupon code based on order total, timestamp, and user usage
+// @Tags coupons
+// @Accept json
+// @Produce json
+// @Param request body models.ValidateCouponRequest true "Coupon Validation Request"
+// @Success 200 {object} models.ValidateCouponResponse
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /coupons/validate [post]
 func ValidateCoupon(w http.ResponseWriter, r *http.Request) {
 	var req models.ValidateCouponRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {

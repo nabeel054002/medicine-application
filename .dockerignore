@@ -1,0 +1,6 @@
+# Don't send these to the Docker daemon
+.git
+Dockerfile
+.dockerignore
+*.md
+*.log

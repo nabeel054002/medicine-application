@@ -10,7 +10,17 @@ import (
 	"github.com/nabeel054002/coupon-system/internal/utils"
 )
 
-// handlers/coupons.go
+// GetApplicableCoupons godoc
+// @Summary Get applicable coupons for a medicine cart
+// @Description Returns coupons applicable based on cart items, order total, and timestamp.
+// @Tags coupons
+// @Accept json
+// @Produce json
+// @Param request body models.ApplicableCouponsRequest true "Applicable Coupons Request"
+// @Success 200 {object} models.ApplicableCouponsResponse
+// @Failure 400 {string} string "Invalid request"
+// @Failure 500 {string} string "DB error"
+// @Router /coupons/applicable [post]
 func GetApplicableCoupons(w http.ResponseWriter, r *http.Request) {
 	var req models.ApplicableCouponsRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {

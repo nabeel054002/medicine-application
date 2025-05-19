@@ -1,0 +1,217 @@
+basePath: /
+definitions:
+  models.ApplicableCouponsRequest:
+    properties:
+      cart_items:
+        items:
+          $ref: '#/definitions/models.CartItem'
+        type: array
+      order_total:
+        type: number
+      timestamp:
+        type: string
+      user_id:
+        description: optional for now
+        type: string
+    type: object
+  models.ApplicableCouponsResponse:
+    properties:
+      applicable_coupons:
+        items:
+          $ref: '#/definitions/models.Coupon'
+        type: array
+    type: object
+  models.CartItem:
+    properties:
+      category:
+        type: string
+      id:
+        type: string
+    type: object
+  models.Coupon:
+    properties:
+      applicable_for_categories:
+        items:
+          type: integer
+        type: array
+      applicable_for_medicine_ids:
+        items:
+          type: string
+        type: array
+      code:
+        type: string
+      discounts:
+        items:
+          $ref: '#/definitions/models.Discount'
+        type: array
+      expiry_date:
+        type: string
+      max_usage_per_user:
+        type: integer
+      min_order_value:
+        type: number
+      terms_and_conditions:
+        type: string
+      time_windows:
+        items:
+          $ref: '#/definitions/models.TimeWindow'
+        type: array
+      usage_type:
+        $ref: '#/definitions/models.UsageType'
+    type: object
+  models.Discount:
+    properties:
+      discount_type:
+        description: '''items'' or ''charges'' // can make this also into a separate
+          type but tbh its fine for now'
+        type: string
+      discount_value:
+        type: number
+    type: object
+  models.TimeWindow:
+    properties:
+      end_time:
+        type: string
+      start_time:
+        type: string
+    type: object
+  models.UsageType:
+    enum:
+    - one_time
+    - multi_use
+    - time_based
+    type: string
+    x-enum-varnames:
+    - OneTime
+    - MultiUse
+    - TimeBased
+  models.ValidateCouponRequest:
+    properties:
+      coupon_code:
+        type: string
+      order_total:
+        type: number
+      timestamp:
+        type: string
+      user_id:
+        type: string
+    type: object
+  models.ValidateCouponResponse:
+    properties:
+      reason:
+        type: string
+      valid:
+        type: boolean
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API to apply and validate coupons for medicine cart
+  title: Coupon Service API
+  version: "1.0"
+paths:
+  /coupons/applicable:
+    post:
+      consumes:
+      - application/json
+      description: Returns coupons applicable based on cart items, order total, and
+        timestamp.
+      parameters:
+      - description: Applicable Coupons Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.ApplicableCouponsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ApplicableCouponsResponse'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: DB error
+          schema:
+            type: string
+      summary: Get applicable coupons for a medicine cart
+      tags:
+      - coupons
+  /coupons/create:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new coupon with applicable discounts, time windows, and
+        restrictions.
+      parameters:
+      - description: Coupon to create
+        in: body
+        name: coupon
+        required: true
+        schema:
+          $ref: '#/definitions/models.Coupon'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Create a new coupon
+      tags:
+      - coupons
+  /coupons/validate:
+    post:
+      consumes:
+      - application/json
+      description: Validates a coupon code based on order total, timestamp, and user
+        usage
+      parameters:
+      - description: Coupon Validation Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.ValidateCouponRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ValidateCouponResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Validate a coupon
+      tags:
+      - coupons
+swagger: "2.0"

@@ -45,14 +45,6 @@ func validateOneTimeCoupon(c *Coupon) error {
 }
 
 func validateTimeBasedCoupon(c *Coupon) error {
-	now := time.Now().UTC()
-
-	if c.ExpiryDate == nil {
-		return fmt.Errorf("expiry_date is required for time_based usage")
-	}
-	if c.ExpiryDate.Before(now) {
-		return fmt.Errorf("cannot create a time_based coupon that is already expired")
-	}
 	if len(c.TimeWindows) == 0 {
 		return fmt.Errorf("at least one time_window is required for time_based usage")
 	}
@@ -61,15 +53,15 @@ func validateTimeBasedCoupon(c *Coupon) error {
 			return fmt.Errorf("time_window[%d]: end_time must be after start_time", i)
 		}
 	}
+	if c.MaxUsagePerUser != nil {
+		return fmt.Errorf("max_usage_per_user is required for multi_use usage")
+	}
 	return nil
 }
 
 func validateMultiUseCoupon(c *Coupon) error {
 	if c.MaxUsagePerUser == nil {
 		return fmt.Errorf("max_usage_per_user is required for multi_use usage")
-	}
-	if c.ExpiryDate != nil {
-		return fmt.Errorf("expiry_date should not be set for multi_use usage")
 	}
 	if len(c.TimeWindows) > 0 {
 		return fmt.Errorf("time_windows should not be set for multi_use usage")

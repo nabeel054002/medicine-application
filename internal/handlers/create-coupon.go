@@ -3,12 +3,24 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/nabeel054002/coupon-system/internal/db"
 	"net/http"
-	"github.com/nabeel054002/coupon-system/internal/models"
 	"log"
+
+	"github.com/nabeel054002/coupon-system/internal/db"
+	"github.com/nabeel054002/coupon-system/internal/models"
 )
 
+// CreateCoupon godoc
+// @Summary Create a new coupon
+// @Description Adds a new coupon with applicable discounts, time windows, and restrictions.
+// @Tags coupons
+// @Accept json
+// @Produce json
+// @Param coupon body models.Coupon true "Coupon to create"
+// @Success 201 {object} map[string]interface{}
+// @Failure 400 {string} string "Bad Request"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /coupons/create [post]
 func CreateCoupon(w http.ResponseWriter, r *http.Request) {
 	var coupon models.Coupon
 	if err := json.NewDecoder(r.Body).Decode(&coupon); err != nil {

@@ -1,3 +1,9 @@
+
+// @title Coupon Service API
+// @version 1.0
+// @description API to apply and validate coupons for medicine cart
+// @host localhost:8080
+// @BasePath /
 package main
 
 import (
@@ -5,6 +11,7 @@ import (
 	"net/http"
 	"github.com/nabeel054002/coupon-system/internal/routes"
 	"github.com/nabeel054002/coupon-system/internal/db"
+
 )
 
 func main() {
@@ -33,7 +40,7 @@ func main() {
 
 	// Start server
 	log.Println("Starting server on :8080")
-	if err := http.ListenAndServe(":8080", router); err != nil {
+	if err := http.ListenAndServe("0.0.0.0:8080", router); err != nil {
 		log.Fatalf("Server failed to start: %v", err)
 	}
 }
