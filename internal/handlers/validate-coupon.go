@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"database/sql"
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 
@@ -58,6 +60,8 @@ func ValidateCoupon(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	print("usageType: ", usageType)
+
 	if minOrderValue != nil && req.OrderTotal < *minOrderValue {
 		json.NewEncoder(w).Encode(models.ValidateCouponResponse{
 			Valid:  false,
@@ -68,14 +72,18 @@ func ValidateCoupon(w http.ResponseWriter, r *http.Request) {
 
 	if usageType == "one_time" || usageType == "multi_use" {
 		var usageCount int
-		err = db.DB.QueryRow(`
-			SELECT usage_count FROM coupon_usages
-			WHERE coupon_code = ? AND user_id = ?
-		`, req.CouponCode, req.UserID).Scan(&usageCount)
-		if err != nil {
-			http.Error(w, "DB error", http.StatusInternalServerError)
-			return
-		}
+	err = db.DB.QueryRow(`
+		SELECT usage_count FROM coupon_usages
+		WHERE coupon_code = ? AND user_id = ?
+	`, req.CouponCode, req.UserID).Scan(&usageCount)
+
+	if err == sql.ErrNoRows {
+		usageCount = 0 // first-time user
+	} else if err != nil {
+		log.Println("DB error:", err)
+		http.Error(w, "DB error", http.StatusInternalServerError)
+		return
+	}
 
 		if usageType == "one_time" && usageCount > 0 {
 			json.NewEncoder(w).Encode(models.ValidateCouponResponse{

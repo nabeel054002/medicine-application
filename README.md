@@ -42,3 +42,6 @@
 - Havent verified SQL queries, if there is DB level safety
 
 
+
+
+-- docker commands for self reference
